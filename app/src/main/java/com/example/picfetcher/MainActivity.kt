@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var mainActivityViewModel: MainActivityViewModel
-
+    private lateinit var apiHelper: ApiHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
 
 
-        val apiHelper = ApiHelperImpl(RetrofitClient.apiService)
+        apiHelper = ApiHelperImpl(RetrofitClient.apiService)
 
         mainActivityViewModel = MainActivityViewModel(apiHelper)
 
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         addScrollListener()
 
 
-        mainActivityViewModel.fetchPics()
+        mainActivityViewModel.fetchPicsLimited()
         mainActivityViewModel.imagesMutableLiveData.observe(this, Observer {
             recyclerViewAdapter.updateList(it)
         })
@@ -43,14 +43,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addScrollListener() {
-        Log.e("pagination", "addScrollListener() Called")
+
 
         binding.recyclerView.addOnScrollListener(object :
             PaginationScrollListener(binding.recyclerView.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                Log.e("pagination", "loadMoreItems() Called")
+
                 mainActivityViewModel.nextPage()
-                mainActivityViewModel.fetchPics()
+                mainActivityViewModel.fetchPicsLimited()
             }
 
             override fun isLastPage() = mainActivityViewModel.isLastPage()
@@ -67,14 +67,13 @@ class MainActivity : AppCompatActivity() {
             val visibleItemCount: Int = layoutManager.childCount
             val totalItemCount: Int = layoutManager.itemCount
             val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
-            Log.e("pagination", "isLoading is ${isLoading()}")
-            Log.e("pagination", "isLastPage is ${isLastPage()}")
+
 
             if (!isLoading() && !isLastPage()) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
                 ) {
-                    Log.e("pagination", "onScrolled() Called")
+
                     loadMoreItems()
                 }
             }

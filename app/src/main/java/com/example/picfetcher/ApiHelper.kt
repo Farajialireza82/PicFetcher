@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ApiHelper {
 
-    fun getPhotos(): Flow<List<ApiPhoto>>
-
-    fun getPhotosLimited(pageNumber:Int): Flow<List<ApiPhoto>>
+    fun getPhotosLimited(firstPicId:Int): Flow<List<ApiPhoto>>
 
 }
