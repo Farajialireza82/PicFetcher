@@ -26,7 +26,7 @@ android {
             )
         }
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
     compileOptions {
@@ -54,8 +54,15 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1")
-    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
 
-    implementation ("androidx.paging:paging-runtime:3.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1")
+    implementation("com.github.bumptech.glide:glide:4.13.0")
+    implementation("androidx.paging:paging-runtime:3.0.0")
+
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+
 }

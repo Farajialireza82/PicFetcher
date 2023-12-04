@@ -2,10 +2,11 @@ package com.example.picfetcher
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.example.picfetcher.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity() {
             recyclerViewAdapter.updateList(it)
         })
 
+        mainActivityViewModel.isLoadingMutableLiveData.observe(this, Observer {
+            if (it == true) binding.progressBar.visibility = View.VISIBLE
+            else binding.progressBar.visibility = View.INVISIBLE
+        })
+
 
     }
 
@@ -55,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun isLastPage() = mainActivityViewModel.isLastPage()
 
-            override fun isLoading() = mainActivityViewModel.isLoading
+            override fun isLoading(): Boolean = mainActivityViewModel.isLoadingMutableLiveData.value!!
         })
     }
 
