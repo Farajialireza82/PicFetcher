@@ -1,4 +1,4 @@
-package com.example.picfetcher
+package com.example.picfetcher.network
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory

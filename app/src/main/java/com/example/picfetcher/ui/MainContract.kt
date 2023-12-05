@@ -1,4 +1,7 @@
-package com.example.picfetcher
+package com.example.picfetcher.ui
+
+import com.example.picfetcher.model.ApiPhoto
+import com.example.picfetcher.network.ApiResponseCallback
 
 interface MainContract {
 

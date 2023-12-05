@@ -1,6 +1,7 @@
-package com.example.picfetcher
+package com.example.picfetcher.ui
 
-import android.util.Log
+import com.example.picfetcher.network.ApiResponse
+import com.example.picfetcher.network.ApiResponseCallback
 
 class MainPresenter(
     private val mView: MainContract.View

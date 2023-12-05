@@ -1,4 +1,6 @@
-package com.example.picfetcher
+package com.example.picfetcher.network
+
+import com.example.picfetcher.model.ApiPhoto
 
 interface ApiResponseCallback {
     fun onApiResponse(apiResponse: ApiResponse)

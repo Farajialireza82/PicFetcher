@@ -1,6 +1,8 @@
-package com.example.picfetcher
+package com.example.picfetcher.ui
 
-import android.util.Log
+import com.example.picfetcher.network.ApiResponse
+import com.example.picfetcher.network.ApiResponseCallback
+import com.example.picfetcher.network.RetrofitClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
