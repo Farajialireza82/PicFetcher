@@ -2,6 +2,7 @@ package com.example.picfetcher.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picfetcher.databinding.ImageItemBinding
@@ -11,12 +12,16 @@ class RecyclerViewAdapter(
     private var picsArray: ArrayList<ApiPhoto>
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ImageView>() {
 
-    fun updateList(newList: List<ApiPhoto>) {
-        newList.forEach {
-            picsArray.add(it)
-        }
-        notifyDataSetChanged()
+    fun updateListItems(newList: List<ApiPhoto>) {
+        val newItems = picsArray + newList
+        val picsDiffCallback = PicsCallback(picsArray, newItems)
+        val diffResult = DiffUtil.calculateDiff(picsDiffCallback)
+
+        picsArray.clear()
+        picsArray.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
     }
+
 
     inner class ImageView(val itemBinding: ImageItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root)

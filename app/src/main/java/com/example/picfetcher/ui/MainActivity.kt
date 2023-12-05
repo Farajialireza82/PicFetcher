@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun updateDataToRecyclerView(results: List<ApiPhoto>) {
-        recyclerViewAdapter.updateList(results)
+        recyclerViewAdapter.updateListItems(results)
     }
 
     override fun showProgressBar() {
