@@ -2,19 +2,19 @@ package com.example.picfetcher
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter.LengthFilter
 import android.view.View
-import androidx.lifecycle.Observer
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.example.picfetcher.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainContract.View {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var apiHelper: ApiHelper
+    private lateinit var presenter: MainPresenter
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -22,46 +22,51 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        presenter = MainPresenter(this)
+
         recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
-
-
-        apiHelper = ApiHelperImpl(RetrofitClient.apiService)
-
-        mainActivityViewModel = MainActivityViewModel(apiHelper)
-
         binding.recyclerView.adapter = recyclerViewAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
+        presenter.fetchData()
         addScrollListener()
 
-
-        mainActivityViewModel.fetchPicsLimited()
-        mainActivityViewModel.imagesMutableLiveData.observe(this, Observer {
-            recyclerViewAdapter.updateList(it)
-        })
-
-        mainActivityViewModel.isLoadingMutableLiveData.observe(this, Observer {
-            if (it == true) binding.progressBar.visibility = View.VISIBLE
-            else binding.progressBar.visibility = View.INVISIBLE
-        })
+//        mainActivityViewModel.fetchPicsLimited()
 
 
     }
 
-    private fun addScrollListener() {
+    override fun updateDataToRecyclerView(results: List<ApiPhoto>) {
+        recyclerViewAdapter.updateList(results)
+    }
 
+    override fun showProgressBar() {
+        isLoading = true
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        isLoading = false
+        binding.progressBar.visibility = View.GONE
+    }
+
+    override fun showToast(string: String) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addScrollListener() {
 
         binding.recyclerView.addOnScrollListener(object :
             PaginationScrollListener(binding.recyclerView.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
 
-                mainActivityViewModel.nextPage()
-                mainActivityViewModel.fetchPicsLimited()
+                presenter.fetchData()
             }
 
-            override fun isLastPage() = mainActivityViewModel.isLastPage()
+            override fun isLastPage() = false
 
-            override fun isLoading(): Boolean = mainActivityViewModel.isLoadingMutableLiveData.value!!
+
+            override fun isLoading(): Boolean = isLoading
         })
     }
 
@@ -78,10 +83,7 @@ class MainActivity : AppCompatActivity() {
             if (!isLoading() && !isLastPage()) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
-                ) {
-
-                    loadMoreItems()
-                }
+                ) loadMoreItems()
             }
         }
 
