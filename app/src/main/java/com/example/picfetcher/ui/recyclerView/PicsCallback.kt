@@ -1,4 +1,4 @@
-package com.example.picfetcher.ui
+package com.example.picfetcher.ui.recyclerView
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.picfetcher.model.ApiPhoto

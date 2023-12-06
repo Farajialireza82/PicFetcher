@@ -15,6 +15,8 @@ interface MainContract {
 
     interface Presenter{
         fun fetchData()
+
+        fun attach(mView: MainContract.View)
     }
 
     interface Model{

@@ -6,15 +6,24 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.picfetcher.BaseApplication
 import com.example.picfetcher.model.ApiPhoto
 import com.example.picfetcher.databinding.ActivityMainBinding
+import com.example.picfetcher.network.APIService
+import com.example.picfetcher.ui.recyclerView.RecyclerViewAdapter
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    private lateinit var presenter: MainPresenter
     private var isLoading = false
+
+    lateinit var presenter: MainContract.Presenter
+
+    @Inject
+    lateinit var apiService: APIService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -22,7 +31,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        presenter = MainPresenter(this)
+        (application as BaseApplication).getNetworkComponent().inject(this)
+
+        presenter = MainPresenter(apiService)
+
+        presenter.attach(this)
 
         recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
         binding.recyclerView.adapter = recyclerViewAdapter
@@ -30,8 +43,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         presenter.fetchData()
         addScrollListener()
-
-//        mainActivityViewModel.fetchPicsLimited()
 
 
     }

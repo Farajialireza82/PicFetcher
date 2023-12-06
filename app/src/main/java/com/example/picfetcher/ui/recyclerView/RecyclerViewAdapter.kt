@@ -1,4 +1,4 @@
-package com.example.picfetcher.ui
+package com.example.picfetcher.ui.recyclerView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,6 +1,11 @@
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+
+
 }
 
 android {
@@ -24,17 +29,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     buildFeatures {
         viewBinding = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "18"
     }
 }
 
@@ -51,13 +57,19 @@ dependencies {
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
 
     implementation("com.github.bumptech.glide:glide:4.13.0")
 
     implementation("io.reactivex.rxjava3:rxjava:3.1.8")
-    implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+    implementation ("com.google.dagger:dagger:2.44")
+    implementation("com.google.dagger:dagger-android:2.44")
+    implementation("com.google.dagger:dagger-android-support:2.44")
+    kapt ("com.google.dagger:dagger-compiler:2.44")
+    kapt("com.google.dagger:dagger-android-processor:2.44")
 
 
 }
