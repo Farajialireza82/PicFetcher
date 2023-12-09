@@ -12,6 +12,11 @@ class RecyclerViewAdapter(
     private var picsArray: ArrayList<ApiPhoto>
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ImageView>() {
 
+    private var onClickListener: OnClickListener? = null
+
+    inner class ImageView(val itemBinding: ImageItemBinding) :
+        RecyclerView.ViewHolder(itemBinding.root)
+
     fun updateListItems(newList: List<ApiPhoto>) {
         val newItems = picsArray + newList
         val picsDiffCallback = PicsCallback(picsArray, newItems)
@@ -22,9 +27,9 @@ class RecyclerViewAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-
-    inner class ImageView(val itemBinding: ImageItemBinding) :
-        RecyclerView.ViewHolder(itemBinding.root)
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -44,9 +49,18 @@ class RecyclerViewAdapter(
             .load(picsArray[position].url)
             .into(holder.itemBinding.imageView)
         holder.itemBinding.idTextView.text = picsArray[position].id.toString()
+
+        holder.itemView.setOnClickListener {
+            if (onClickListener != null) {
+                onClickListener!!.onClick(picsArray[position])
+            }
+        }
     }
 
 
     override fun getItemCount(): Int = picsArray.size
 
+    interface OnClickListener {
+        fun onClick(apiPhoto: ApiPhoto)
+    }
 }

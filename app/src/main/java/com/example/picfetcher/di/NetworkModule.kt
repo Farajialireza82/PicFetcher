@@ -1,13 +1,11 @@
 package com.example.picfetcher.di
 
 import com.example.picfetcher.network.APIService
-import com.example.picfetcher.network.RetrofitClient
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 
@@ -29,6 +27,5 @@ class NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): APIService =
         retrofit.create(APIService::class.java)
-
 
 }

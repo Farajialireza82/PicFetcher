@@ -2,6 +2,8 @@ package com.example.picfetcher.model
 
 import com.google.gson.annotations.SerializedName
 data class ApiPhoto(
+    @SerializedName("title")
+    val title: String,
     @SerializedName("albumId")
     val albumId: Int,
     @SerializedName("id")
