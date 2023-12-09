@@ -1,4 +1,4 @@
-package com.example.picfetcher.ui.mainActivity
+package com.example.picfetcher.ui.premierFragment
 
 import android.annotation.SuppressLint
 import com.example.picfetcher.network.APIService
@@ -8,9 +8,8 @@ import com.example.picfetcher.network.ApiSingleResponse
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MainModel(val apiService:APIService) : MainContract.Model {
+class PicsListModel(val apiService:APIService) : PicsListContract.Model {
 
-//    var apiService: APIService = RetrofitClient.apiService
     private var STARTING_PAGE_INDEX = 0
 
 

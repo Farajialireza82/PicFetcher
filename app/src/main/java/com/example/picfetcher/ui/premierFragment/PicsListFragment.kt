@@ -1,60 +1,59 @@
-package com.example.picfetcher.ui.mainActivity
+package com.example.picfetcher.ui.premierFragment
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.picfetcher.BaseApplication
 import com.example.picfetcher.R
-import com.example.picfetcher.model.ApiPhoto
-import com.example.picfetcher.databinding.ActivityMainBinding
 import com.example.picfetcher.databinding.BottomSheetBinding
-import com.example.picfetcher.network.APIService
+import com.example.picfetcher.databinding.FragmentPicsListBinding
+import com.example.picfetcher.model.ApiPhoto
+import com.example.picfetcher.ui.bases.BaseFragment
 import com.example.picfetcher.ui.recyclerView.RecyclerViewAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class PicsListFragment(
+    val presenter: PicsListContract.Presenter
+) : BaseFragment(), PicsListContract.View {
 
-    private lateinit var binding: ActivityMainBinding
+
+    private var _binding: FragmentPicsListBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var dialog: BottomSheetDialog
     private lateinit var dialogBinding: BottomSheetBinding
     private var isLoading = false
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_pics_list, container, false)
 
-    lateinit var presenter: MainContract.Presenter
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentPicsListBinding.bind(view)
 
-    @Inject
-    lateinit var apiService: APIService
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityMainBinding.inflate(layoutInflater)
         dialogBinding = BottomSheetBinding.inflate(layoutInflater)
-
-        dialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme)
-        dialog.setContentView(dialogBinding.root)
-
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
-        (application as BaseApplication).getNetworkComponent().inject(this)
-
-        presenter = MainPresenter(apiService)
         presenter.attach(this)
 
-        recyclerViewAdapter = RecyclerViewAdapter(ArrayList())
-        binding.recyclerView.adapter = recyclerViewAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        dialog = BottomSheetDialog(view.context, R.style.BottomSheetDialogTheme)
+        dialog.setContentView(dialogBinding.root)
 
         presenter.fetchPicsList()
+
+        recyclerViewAdapter = RecyclerViewAdapter(presenter.getPicList())
+        binding.recyclerView.adapter = recyclerViewAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
         addScrollListener()
 
         recyclerViewAdapter.setOnClickListener(object :
@@ -64,7 +63,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         })
 
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showBottomSheet(photo: ApiPhoto) {
@@ -97,13 +100,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.progressBar.visibility = View.GONE
     }
 
-    override fun showToast(string: String) {
-        Snackbar.make(binding.recyclerView, string, Toast.LENGTH_SHORT).show()
+    override fun makeToast(string: String) {
+        makeToast(string)
     }
 
     override fun showItemPage(photo: ApiPhoto) {
         showBottomSheet(photo)
-        Log.d("MainActivity", "showItemPage: called")
+
     }
 
     private fun addScrollListener() {
@@ -111,7 +114,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.recyclerView.addOnScrollListener(object :
             PaginationScrollListener(binding.recyclerView.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-
                 presenter.fetchPicsList()
             }
 
@@ -142,5 +144,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         protected abstract fun loadMoreItems()
         abstract fun isLastPage(): Boolean
         abstract fun isLoading(): Boolean
+
+
     }
 }

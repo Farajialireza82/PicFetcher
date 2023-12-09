@@ -1,6 +1,9 @@
 package com.example.picfetcher.di
 
 import com.example.picfetcher.network.APIService
+import com.example.picfetcher.ui.premierFragment.PicsListContract
+import com.example.picfetcher.ui.premierFragment.PicsListFragment
+import com.example.picfetcher.ui.premierFragment.PicsListPresenter
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -27,5 +30,15 @@ class NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): APIService =
         retrofit.create(APIService::class.java)
+
+    @Provides
+    @Singleton
+    fun providePresenter(apiService: APIService): PicsListContract.Presenter =
+        PicsListPresenter(apiService)
+
+    @Provides
+    @Singleton
+    fun providePicsListFragment(presenter: PicsListPresenter): PicsListFragment =
+        PicsListFragment(presenter)
 
 }

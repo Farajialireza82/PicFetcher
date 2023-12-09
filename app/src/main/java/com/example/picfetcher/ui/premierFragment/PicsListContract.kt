@@ -1,21 +1,21 @@
-package com.example.picfetcher.ui.mainActivity
+package com.example.picfetcher.ui.premierFragment
 
 import com.example.picfetcher.model.ApiPhoto
 import com.example.picfetcher.network.ApiResponseCallback
 
-interface MainContract {
+interface PicsListContract {
 
-    interface View{
+    interface View {
         fun updateDataToRecyclerView(results: List<ApiPhoto>)
         fun showProgressBar()
         fun hideProgressBar()
 
-        fun showToast(string: String)
+        fun makeToast(string: String)
 
         fun showItemPage(photo: ApiPhoto)
     }
 
-    interface Presenter{
+    interface Presenter {
 
         fun fetchPicsList()
 
@@ -24,12 +24,14 @@ interface MainContract {
         fun showItemDetails(apiPhoto: ApiPhoto)
 
         fun attach(mView: View)
+
+        fun getPicList(): ArrayList<ApiPhoto>
     }
 
-    interface Model{
+    interface Model {
         fun loadPicsList(apiResponseCallback: ApiResponseCallback)
 
-        fun loadSinglePicture(picId:Int, apiResponseCallback: ApiResponseCallback)
+        fun loadSinglePicture(picId: Int, apiResponseCallback: ApiResponseCallback)
     }
 
 }
