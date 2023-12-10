@@ -36,9 +36,4 @@ class NetworkModule {
     fun providePresenter(apiService: APIService): PicsListContract.Presenter =
         PicsListPresenter(apiService)
 
-    @Provides
-    @Singleton
-    fun providePicsListFragment(presenter: PicsListPresenter): PicsListFragment =
-        PicsListFragment(presenter)
-
 }

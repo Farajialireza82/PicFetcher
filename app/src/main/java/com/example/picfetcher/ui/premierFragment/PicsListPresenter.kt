@@ -7,11 +7,10 @@ import com.example.picfetcher.network.ApiResponseCallback
 import com.example.picfetcher.network.ApiSingleResponse
 import javax.inject.Inject
 
-class PicsListPresenter @Inject constructor(apiService: APIService) : PicsListContract.Presenter {
+class PicsListPresenter(apiService: APIService) : PicsListContract.Presenter {
 
     private val model = PicsListModel(apiService)
     private lateinit var mainView: PicsListContract.View
-
     private val _arrayList = ArrayList<ApiPhoto>()
 
     override fun getPicList(): ArrayList<ApiPhoto> {
@@ -50,6 +49,5 @@ class PicsListPresenter @Inject constructor(apiService: APIService) : PicsListCo
             else mainView.makeToast(apiSingleResponse.error?.message.toString())
 
         }
-
     }
 }

@@ -5,9 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.picfetcher.R
@@ -15,9 +13,9 @@ import com.example.picfetcher.databinding.BottomSheetBinding
 import com.example.picfetcher.databinding.FragmentPicsListBinding
 import com.example.picfetcher.model.ApiPhoto
 import com.example.picfetcher.ui.bases.BaseFragment
+import com.example.picfetcher.ui.recyclerView.PaginationScrollListener
 import com.example.picfetcher.ui.recyclerView.RecyclerViewAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
 
 class PicsListFragment(
     val presenter: PicsListContract.Presenter
@@ -30,6 +28,7 @@ class PicsListFragment(
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var dialog: BottomSheetDialog
     private lateinit var dialogBinding: BottomSheetBinding
+
     private var isLoading = false
 
     override fun onCreateView(
@@ -37,6 +36,7 @@ class PicsListFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_pics_list, container, false)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,13 +55,7 @@ class PicsListFragment(
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         addScrollListener()
-
-        recyclerViewAdapter.setOnClickListener(object :
-            RecyclerViewAdapter.OnClickListener {
-            override fun onClick(apiPhoto: ApiPhoto) {
-                presenter.fetchSinglePic(apiPhoto.id)
-            }
-        })
+        addOnClickListener()
 
     }
 
@@ -109,9 +103,22 @@ class PicsListFragment(
 
     }
 
+    private fun addOnClickListener() {
+
+        val onClickFunc: RecyclerViewAdapter.OnClickListener = object :
+            RecyclerViewAdapter.OnClickListener {
+            override fun onClick(apiPhoto: ApiPhoto) {
+                presenter.fetchSinglePic(apiPhoto.id)
+            }
+        }
+
+        recyclerViewSetOnClickListener(recyclerViewAdapter, onClickFunc)
+
+    }
+
     private fun addScrollListener() {
 
-        binding.recyclerView.addOnScrollListener(object :
+        val onScrollListenerFunc = object :
             PaginationScrollListener(binding.recyclerView.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
                 presenter.fetchPicsList()
@@ -121,30 +128,10 @@ class PicsListFragment(
 
 
             override fun isLoading(): Boolean = isLoading
-        })
-    }
-
-    abstract class PaginationScrollListener(private val layoutManager: LinearLayoutManager) :
-        RecyclerView.OnScrollListener() {
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            val visibleItemCount: Int = layoutManager.childCount
-            val totalItemCount: Int = layoutManager.itemCount
-            val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
-
-
-            if (!isLoading() && !isLastPage()) {
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
-                    && firstVisibleItemPosition >= 0
-                ) loadMoreItems()
-            }
         }
 
-        protected abstract fun loadMoreItems()
-        abstract fun isLastPage(): Boolean
-        abstract fun isLoading(): Boolean
 
+        recyclerViewAddOnScrollListener(binding.recyclerView, onScrollListenerFunc)
 
     }
 }
