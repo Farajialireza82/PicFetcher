@@ -5,11 +5,10 @@ import com.example.picfetcher.network.APIService
 import com.example.picfetcher.network.ApiListResponse
 import com.example.picfetcher.network.ApiResponseCallback
 import com.example.picfetcher.network.ApiSingleResponse
-import javax.inject.Inject
+import com.example.picfetcher.ui.bases.BasePresenter
 
-class PicsListPresenter(apiService: APIService) : PicsListContract.Presenter {
+class PicsListPresenter(val apiService: APIService) : PicsListContract.Presenter, BasePresenter() {
 
-    private val model = PicsListModel(apiService)
     private lateinit var mainView: PicsListContract.View
     private val _arrayList = ArrayList<ApiPhoto>()
 
@@ -19,12 +18,12 @@ class PicsListPresenter(apiService: APIService) : PicsListContract.Presenter {
 
     override fun fetchPicsList() {
         mainView.showProgressBar()
-        model.loadPicsList(ApiResultCallbackImpl())
+        loadPicsList(ApiResultCallbackImpl(), apiService)
     }
 
     override fun fetchSinglePic(picId: Int) {
         mainView.showProgressBar()
-        model.loadSinglePicture(picId, ApiResultCallbackImpl())
+        loadSinglePicture(picId, ApiResultCallbackImpl(), apiService)
     }
 
     override fun showItemDetails(apiPhoto: ApiPhoto) {
