@@ -1,6 +1,5 @@
-package com.example.picfetcher
+package com.example.picfetcher.api
 
-import com.squareup.moshi.Moshi
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -14,5 +13,5 @@ object RetrofitClient {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 
-    val apiService:APIService = getClientInstance().create(APIService::class.java)
+    val apiService: APIService = getClientInstance().create(APIService::class.java)
 }

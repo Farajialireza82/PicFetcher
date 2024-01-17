@@ -1,4 +1,4 @@
-package com.example.picfetcher
+package com.example.picfetcher.model
 
 import com.squareup.moshi.Json
 

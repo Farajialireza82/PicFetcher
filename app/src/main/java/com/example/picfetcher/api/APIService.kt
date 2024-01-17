@@ -1,6 +1,6 @@
-package com.example.picfetcher
+package com.example.picfetcher.api
 
-import kotlinx.coroutines.flow.Flow
+import com.example.picfetcher.model.ApiPhoto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

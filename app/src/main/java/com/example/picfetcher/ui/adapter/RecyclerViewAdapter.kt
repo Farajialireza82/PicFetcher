@@ -1,10 +1,11 @@
-package com.example.picfetcher
+package com.example.picfetcher.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picfetcher.databinding.ImageItemBinding
+import com.example.picfetcher.model.ApiPhoto
 
 class RecyclerViewAdapter(
     private var picsArray: ArrayList<ApiPhoto>
@@ -23,7 +24,7 @@ class RecyclerViewAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerViewAdapter.ImageView = ImageView(
+    ): ImageView = ImageView(
         ImageItemBinding.inflate(
             LayoutInflater.from(
                 parent.context
@@ -33,7 +34,7 @@ class RecyclerViewAdapter(
         )
     )
 
-    override fun onBindViewHolder(holder: RecyclerViewAdapter.ImageView, position: Int) {
+    override fun onBindViewHolder(holder: ImageView, position: Int) {
         Glide.with(holder.itemBinding.root)
             .load(picsArray[position].url)
             .into(holder.itemBinding.imageView)
